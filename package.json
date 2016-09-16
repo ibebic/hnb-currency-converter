@@ -1,0 +1,20 @@
+{
+  "name": "curr-converter",
+  "version": "1.0.0",
+  "description": "CLI currency converter",
+  "main": "server.js",
+  "bin": {
+    "convert": "cli.js",
+    "hpb": "cli.js"
+
+  },
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "log-symbols": "^1.0.2",
+    "request": "^2.74.0"
+  }
+}
