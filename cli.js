@@ -1,37 +1,27 @@
+#!/usr/bin/env node
+
 'use strict';
 
-const request = require('request');
+const getExchangeRecords = require('./parser.js');
+const helpers = require('./helpers.js');
+const toUpper = helpers.toUpper;
+const toFloat = helpers.toFloat;
 
-var url = 'http://www.hnb.hr/hnb-tecajna-lista-portlet/rest/tecajn/getformatedrecords.dat';
+// Parse user input. [ amount source _ dest ]
+let args = process.argv.slice(2);
+const val = toFloat(args[0]);
+const source = toUpper(args[1]);
+const dest = toUpper(args[3]);
 
-request(url, function (error, response, html) {
-  var val = parseFloat(process.argv[2].replace(',', '.'));
-  var source = process.argv[3].toUpperCase();
-  var dest = process.argv[5].toUpperCase();
+// Fetch exchange rates and do actual conversion.
+getExchangeRecords()
+  .then(records => exchange(records, source, dest, val))
+  .then(outVal => console.log(`${ val } ${ source } = ${ outVal } ${ dest }`))
+  .catch(err => console.error('Error:', err.message));
 
-  if (!error) {
-    var lines = html.split('\n');
-    var obj = [];
-    obj[lines.length] = { curr: 'HRK', unit: 1, buy: 1, avg: 1, sell: 1 };
-    for (var i = 1; i < lines.length; i++) {
-      var curr = lines[i].substring(3, 6);
-      var unit = parseInt(lines[i].substring(6, 9), 10);
-      var buy = parseFloat(lines[i].substring(16, 25).replace(',', '.'));
-      var avg = parseFloat(lines[i].substring(31, 40).replace(',', '.'));
-      var sell = parseFloat(lines[i].substring(46, 55).replace(',', '.'));
-      // console.log(curr + ' ' + unit + ' ' + buy + ' ' + avg + ' ' + sell);
-      obj[i] = { curr: curr, unit: unit, buy: buy, avg: avg, sell: sell };
-    }
-    // original format
-    var initial = obj.filter(function (obj) {
-      return obj.curr === source;
-    });
-    // target format
-    var target = obj.filter(function (obj) {
-      return obj.curr === dest;
-    });
-    // amount
-    var result = parseFloat(parseFloat(val) * parseFloat(initial[0].avg) / parseFloat(target[0].avg)).toFixed(6);
-    console.log(val + ' ' + source + ' = ' + result + ' ' + dest);
-  }
-});
+function exchange(records, sourceCurr, destCurr, val) {
+  let source = records[sourceCurr];
+  let dest = records[destCurr];
+
+  return ((val * source.avg) / dest.avg).toFixed(6);
+}
