@@ -6,12 +6,14 @@ const getExchangeRecords = require('./parser.js');
 const helpers = require('./helpers.js');
 const toUpper = helpers.toUpper;
 const toFloat = helpers.toFloat;
+const parseArgs = helpers.parseArgs;
 
 // Parse user input. [ amount source _ dest ]
 let args = process.argv.slice(2);
-const val = toFloat(args[0]);
-const source = toUpper(args[1]);
-const dest = toUpper(args[3]);
+const arr = parseArgs(args);
+const val = toFloat(arr[0]);
+const source = toUpper(arr[1]);
+const dest = toUpper(arr[2]);
 
 // Fetch exchange rates and do actual conversion.
 getExchangeRecords()
