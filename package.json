@@ -10,6 +10,9 @@
   "scripts": {
     "start": "node cli.js"
   },
+  "engines": {
+    "node": ">=6"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

@@ -3,10 +3,7 @@
 'use strict';
 
 const getExchangeRecords = require('./parser.js');
-const helpers = require('./helpers.js');
-const toUpper = helpers.toUpper;
-const toFloat = helpers.toFloat;
-const parseArgs = helpers.parseArgs;
+const { toUpper, toFloat, parseArgs } = require('./helpers.js');
 
 // Parse user input. [ amount source _ dest ]
 let args = process.argv.slice(2);
