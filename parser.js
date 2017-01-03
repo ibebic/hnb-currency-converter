@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('request');
-const toFloat = require('./helpers.js').toFloat;
+const { toFloat } = require('./helpers.js');
 
 const url = 'http://www.hnb.hr/hnb-tecajna-lista-portlet/rest/tecajn/getformatedrecords.dat';
 const hrk = { curr: 'HRK', unit: 1, buy: 1, avg: 1, sell: 1 };
